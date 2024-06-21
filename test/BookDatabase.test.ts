@@ -44,6 +44,13 @@ describe("BookDatabase", function () {
       expect(count).to.equal(0);
     });
 
+    it("Should not remove book if not owner", async function () {
+      const { bookDatabase, owner, otherAccount } = await loadFixture(deployFixture);
+
+      await bookDatabase.addBook("title", "author", "genre", 2021, 300);
+      await expect(bookDatabase.connect(otherAccount).deleteBook(1)).to.be.revertedWith("Only owner can call this function");
+    });
+
     it("Should get book", async function () {
       const { bookDatabase, owner, otherAccount } = await loadFixture(deployFixture);
 
